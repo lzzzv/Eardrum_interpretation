@@ -219,6 +219,19 @@
                     android:textColor="@color/sage_ink"
                     android:textSize="11.5sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/chipShape"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_chip_ok"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    android:text="@string/chip_ok_shape"
+                    android:textColor="@color/sage_ink"
+                    android:textSize="11.5sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <Button

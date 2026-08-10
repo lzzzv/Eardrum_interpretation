@@ -7,11 +7,15 @@
 
     <string name="title_warning">影像品質不足</string>
     <string name="desc_warning">建議在明亮環境下重新拍攝，並將耳膜對準畫面中央</string>
+    <string name="title_not_otoscope">看起來不是耳鏡照片</string>
+    <string name="desc_not_otoscope">這張影像可能不是耳鏡（otoscope）拍攝的耳膜照片，請確認上傳正確的耳鏡影像</string>
     <string name="chip_too_dark">太暗</string>
     <string name="chip_too_bright">太亮</string>
     <string name="chip_too_blurry">太模糊</string>
     <string name="chip_ok_brightness">亮度正常</string>
     <string name="chip_ok_sharpness">清晰度正常</string>
+    <string name="chip_not_otoscope">不像耳鏡照片</string>
+    <string name="chip_ok_shape">畫面形狀正常</string>
 
     <string name="badge_normal">正常 Normal</string>
     <string name="badge_abnormal">異常 Abnormal</string>

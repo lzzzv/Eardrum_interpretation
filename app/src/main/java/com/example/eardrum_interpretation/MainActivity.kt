@@ -82,6 +82,12 @@ class MainActivity : AppCompatActivity() {
         showGroup(groupWarning)
         findViewById<ImageView>(R.id.warningThumb).setImageBitmap(bitmap)
 
+        val onlyShapeIssue = quality.missingVignette && !quality.isDark && !quality.isBright && !quality.isBlurry
+        findViewById<TextView>(R.id.tvWarningTitle).text =
+            getString(if (onlyShapeIssue) R.string.title_not_otoscope else R.string.title_warning)
+        findViewById<TextView>(R.id.tvWarningDesc).text =
+            getString(if (onlyShapeIssue) R.string.desc_not_otoscope else R.string.desc_warning)
+
         val chipBrightness = findViewById<TextView>(R.id.chipBrightness)
         when {
             quality.isDark -> setChip(chipBrightness, getString(R.string.chip_too_dark), warn = true)
@@ -94,6 +100,13 @@ class MainActivity : AppCompatActivity() {
             setChip(chipSharpness, getString(R.string.chip_too_blurry), warn = true)
         } else {
             setChip(chipSharpness, getString(R.string.chip_ok_sharpness), warn = false)
+        }
+
+        val chipShape = findViewById<TextView>(R.id.chipShape)
+        if (quality.missingVignette) {
+            setChip(chipShape, getString(R.string.chip_not_otoscope), warn = true)
+        } else {
+            setChip(chipShape, getString(R.string.chip_ok_shape), warn = false)
         }
     }
 
