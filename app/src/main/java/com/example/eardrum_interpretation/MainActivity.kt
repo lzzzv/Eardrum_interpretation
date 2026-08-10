@@ -1,5 +1,6 @@
 package com.example.eardrum_interpretation
 
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -17,10 +18,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
-    private var currentBitmap: Bitmap? = null
+    private val confidenceThreshold = 0.6f
+
+    private lateinit var classifier: EardrumClassifier
 
     private lateinit var groupEmpty: View
     private lateinit var groupWarning: View
@@ -45,6 +49,8 @@ class MainActivity : AppCompatActivity() {
         groupWarning = findViewById(R.id.groupWarning)
         groupResult = findViewById(R.id.groupResult)
 
+        classifier = EardrumClassifier(this)
+
         val onPickClick = View.OnClickListener { launchPicker() }
         findViewById<Button>(R.id.btnPickImage).setOnClickListener(onPickClick)
         findViewById<Button>(R.id.btnRetryWarning).setOnClickListener(onPickClick)
@@ -63,7 +69,6 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "圖片讀取失敗，請重新選擇", Toast.LENGTH_SHORT).show()
             return
         }
-        currentBitmap = bitmap
 
         val quality = ImageQualityChecker.check(bitmap)
         if (!quality.passed) {
@@ -103,15 +108,66 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun runInference(bitmap: Bitmap) {
+        Thread {
+            val prediction = classifier.classify(bitmap)
+            runOnUiThread { showResultState(bitmap, prediction) }
+        }.start()
+    }
+
+    private fun showResultState(bitmap: Bitmap, prediction: EardrumClassifier.Prediction) {
+        showGroup(groupResult)
+        findViewById<ImageView>(R.id.ivResultThumb).setImageBitmap(bitmap)
+
+        val badge = findViewById<View>(R.id.resultBadge)
+        val badgeIcon = findViewById<ImageView>(R.id.ivResultBadgeIcon)
+        val badgeText = findViewById<TextView>(R.id.tvResultBadge)
+        val confNum = findViewById<TextView>(R.id.tvConfidenceNum)
+        val confLabel = findViewById<TextView>(R.id.tvConfidenceLabel)
+        val advice = findViewById<TextView>(R.id.tvAdvice)
+
+        confNum.text = "${(prediction.confidence * 100).roundToInt()}%"
+
+        when {
+            prediction.confidence < confidenceThreshold -> {
+                badge.setBackgroundResource(R.drawable.bg_badge_apricot)
+                badgeIcon.setImageResource(R.drawable.ic_question_circle)
+                badgeIcon.imageTintList = ColorStateList.valueOf(getColor(R.color.apricot))
+                badgeText.text = getString(R.string.badge_uncertain)
+                badgeText.setTextColor(getColor(R.color.apricot))
+                confNum.setTextColor(getColor(R.color.apricot))
+                confLabel.text = getString(R.string.confidence_label_low)
+                advice.text = getString(R.string.advice_uncertain)
+                advice.visibility = View.VISIBLE
+            }
+            prediction.label == "Normal" -> {
+                badge.setBackgroundResource(R.drawable.bg_badge_sage)
+                badgeIcon.setImageResource(R.drawable.ic_check)
+                badgeIcon.imageTintList = ColorStateList.valueOf(getColor(R.color.sage_ink))
+                badgeText.text = getString(R.string.badge_normal)
+                badgeText.setTextColor(getColor(R.color.sage_ink))
+                confNum.setTextColor(getColor(R.color.sage_ink))
+                confLabel.text = getString(R.string.confidence_label)
+                advice.visibility = View.GONE
+            }
+            else -> {
+                badge.setBackgroundResource(R.drawable.bg_badge_coral)
+                badgeIcon.setImageResource(R.drawable.ic_alert_circle)
+                badgeIcon.imageTintList = ColorStateList.valueOf(getColor(R.color.coral))
+                badgeText.text = getString(R.string.badge_abnormal)
+                badgeText.setTextColor(getColor(R.color.coral))
+                confNum.setTextColor(getColor(R.color.coral))
+                confLabel.text = getString(R.string.confidence_label)
+                advice.text = getString(R.string.advice_abnormal)
+                advice.visibility = View.VISIBLE
+            }
+        }
+    }
+
     private fun showGroup(visible: View) {
         for (group in listOf(groupEmpty, groupWarning, groupResult)) {
             group.visibility = if (group === visible) View.VISIBLE else View.GONE
         }
-    }
-
-    private fun runInference(bitmap: Bitmap) {
-        // TODO: replaced by real TFLite inference in the next step.
-        Toast.makeText(this, "品質通過，AI 判讀將在下一步實作", Toast.LENGTH_SHORT).show()
     }
 
     private fun decodeBitmap(uri: Uri): Bitmap? {
