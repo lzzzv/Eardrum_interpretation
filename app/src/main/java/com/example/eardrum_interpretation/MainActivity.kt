@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
@@ -19,6 +21,10 @@ import androidx.core.view.WindowInsetsCompat
 class MainActivity : AppCompatActivity() {
 
     private var currentBitmap: Bitmap? = null
+
+    private lateinit var groupEmpty: View
+    private lateinit var groupWarning: View
+    private lateinit var groupResult: View
 
     private val pickImage =
         registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -34,6 +40,10 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        groupEmpty = findViewById(R.id.groupEmpty)
+        groupWarning = findViewById(R.id.groupWarning)
+        groupResult = findViewById(R.id.groupResult)
 
         val onPickClick = View.OnClickListener { launchPicker() }
         findViewById<Button>(R.id.btnPickImage).setOnClickListener(onPickClick)
@@ -54,8 +64,54 @@ class MainActivity : AppCompatActivity() {
             return
         }
         currentBitmap = bitmap
-        // TEMP verification for step 4: replaced by the real quality-check / result flow next.
-        Toast.makeText(this, "已選擇圖片：${bitmap.width}x${bitmap.height}", Toast.LENGTH_SHORT).show()
+
+        val quality = ImageQualityChecker.check(bitmap)
+        if (!quality.passed) {
+            showWarningState(bitmap, quality)
+        } else {
+            runInference(bitmap)
+        }
+    }
+
+    private fun showWarningState(bitmap: Bitmap, quality: ImageQualityChecker.Result) {
+        showGroup(groupWarning)
+        findViewById<ImageView>(R.id.warningThumb).setImageBitmap(bitmap)
+
+        val chipBrightness = findViewById<TextView>(R.id.chipBrightness)
+        when {
+            quality.isDark -> setChip(chipBrightness, getString(R.string.chip_too_dark), warn = true)
+            quality.isBright -> setChip(chipBrightness, getString(R.string.chip_too_bright), warn = true)
+            else -> setChip(chipBrightness, getString(R.string.chip_ok_brightness), warn = false)
+        }
+
+        val chipSharpness = findViewById<TextView>(R.id.chipSharpness)
+        if (quality.isBlurry) {
+            setChip(chipSharpness, getString(R.string.chip_too_blurry), warn = true)
+        } else {
+            setChip(chipSharpness, getString(R.string.chip_ok_sharpness), warn = false)
+        }
+    }
+
+    private fun setChip(chip: TextView, text: String, warn: Boolean) {
+        chip.text = text
+        if (warn) {
+            chip.setBackgroundResource(R.drawable.bg_chip_warn)
+            chip.setTextColor(getColor(R.color.apricot))
+        } else {
+            chip.setBackgroundResource(R.drawable.bg_chip_ok)
+            chip.setTextColor(getColor(R.color.sage_ink))
+        }
+    }
+
+    private fun showGroup(visible: View) {
+        for (group in listOf(groupEmpty, groupWarning, groupResult)) {
+            group.visibility = if (group === visible) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun runInference(bitmap: Bitmap) {
+        // TODO: replaced by real TFLite inference in the next step.
+        Toast.makeText(this, "品質通過，AI 判讀將在下一步實作", Toast.LENGTH_SHORT).show()
     }
 
     private fun decodeBitmap(uri: Uri): Bitmap? {

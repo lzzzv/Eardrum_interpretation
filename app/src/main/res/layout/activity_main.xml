@@ -144,12 +144,13 @@
             android:paddingHorizontal="36dp"
             android:visibility="gone">
 
-            <View
+            <ImageView
                 android:id="@+id/warningThumb"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:alpha="0.5"
-                android:background="@drawable/bg_thumb_placeholder" />
+                android:background="@drawable/bg_thumb_placeholder"
+                android:scaleType="centerCrop"
+                android:contentDescription="@null" />
 
             <FrameLayout
                 android:layout_width="44dp"
