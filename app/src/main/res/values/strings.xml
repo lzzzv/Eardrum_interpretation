@@ -1,3 +1,27 @@
 <resources>
-    <string name="app_name">Eardrum_interpretation</string>
+    <string name="app_name">耳膜判讀</string>
+
+    <string name="title_empty">開始判讀</string>
+    <string name="desc_empty">選擇一張耳膜內視鏡影像，AI 會協助判讀正常或異常</string>
+    <string name="btn_pick_image">從相簿選擇圖片</string>
+
+    <string name="title_warning">影像品質不足</string>
+    <string name="desc_warning">建議在明亮環境下重新拍攝，並將耳膜對準畫面中央</string>
+    <string name="chip_too_dark">太暗</string>
+    <string name="chip_too_bright">太亮</string>
+    <string name="chip_too_blurry">太模糊</string>
+    <string name="chip_ok_brightness">亮度正常</string>
+    <string name="chip_ok_sharpness">清晰度正常</string>
+
+    <string name="badge_normal">正常 Normal</string>
+    <string name="badge_abnormal">異常 Abnormal</string>
+    <string name="badge_uncertain">無法確定</string>
+    <string name="confidence_label">信心值</string>
+    <string name="confidence_label_low">信心值偏低</string>
+    <string name="advice_abnormal">建議諮詢耳鼻喉科醫師進一步檢查</string>
+    <string name="advice_uncertain">AI 對這張影像不太確定，可能是角度、品質或影像本身較不典型</string>
+
+    <string name="btn_retry">重新選擇圖片</string>
+    <string name="disclaimer">僅供研究測試使用，非醫療診斷</string>
+    <string name="disclaimer_result">此結果僅供參考，非醫療診斷</string>
 </resources>

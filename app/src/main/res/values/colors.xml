@@ -2,4 +2,22 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="cream">#FBF7F0</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="ink">#2F3A34</color>
+    <color name="ink_muted">#78847C</color>
+    <color name="line">#E7E0D3</color>
+
+    <color name="sage">#3F8D7A</color>
+    <color name="sage_ink">#1F5347</color>
+    <color name="sage_soft">#DCEDE6</color>
+
+    <color name="apricot">#C97A2E</color>
+    <color name="apricot_soft">#FAEAD6</color>
+
+    <color name="coral">#C15F3F</color>
+    <color name="coral_soft">#F8E2D8</color>
+
+    <color name="bezel">#23281F</color>
 </resources>

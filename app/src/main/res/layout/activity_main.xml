@@ -5,15 +5,354 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/cream"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <!-- Top bar -->
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="20dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <FrameLayout
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/bg_app_mark">
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_ear"
+                app:tint="@color/sage_ink"
+                android:contentDescription="@null" />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/app_name"
+            android:textColor="@color/ink"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Disclaimer footer -->
+    <TextView
+        android:id="@+id/tvDisclaimer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="32dp"
+        android:paddingBottom="20dp"
+        android:gravity="center"
+        android:text="@string/disclaimer"
+        android:textColor="@color/ink_muted"
+        android:textSize="10.5sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Center content area, one group visible at a time -->
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
+        app:layout_constraintBottom_toTopOf="@id/tvDisclaimer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- STATE: empty -->
+        <LinearLayout
+            android:id="@+id/groupEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingHorizontal="36dp">
+
+            <FrameLayout
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/bg_icon_circle_sage">
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_gallery"
+                    app:tint="@color/sage_ink"
+                    android:contentDescription="@null" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/title_empty"
+                android:textColor="@color/ink"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="@string/desc_empty"
+                android:textColor="@color/ink_muted"
+                android:textSize="13.5sp"
+                android:lineSpacingMultiplier="1.3" />
+
+            <Button
+                android:id="@+id/btnPickImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/bg_pill_primary"
+                android:paddingHorizontal="26dp"
+                android:paddingVertical="12dp"
+                android:text="@string/btn_pick_image"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:drawableStart="@drawable/ic_gallery"
+                android:drawableTint="@color/white"
+                android:drawablePadding="8dp"
+                android:elevation="0dp"
+                android:stateListAnimator="@null" />
+        </LinearLayout>
+
+        <!-- STATE: quality warning -->
+        <LinearLayout
+            android:id="@+id/groupWarning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingHorizontal="36dp"
+            android:visibility="gone">
+
+            <View
+                android:id="@+id/warningThumb"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:alpha="0.5"
+                android:background="@drawable/bg_thumb_placeholder" />
+
+            <FrameLayout
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_icon_circle_apricot">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_warning"
+                    app:tint="@color/apricot"
+                    android:contentDescription="@null" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tvWarningTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="@string/title_warning"
+                android:textColor="@color/ink"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvWarningDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="@string/desc_warning"
+                android:textColor="@color/ink_muted"
+                android:textSize="13.5sp"
+                android:lineSpacingMultiplier="1.3" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/chipBrightness"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_chip_warn"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    android:text="@string/chip_too_dark"
+                    android:textColor="@color/apricot"
+                    android:textSize="11.5sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/chipSharpness"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_chip_ok"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    android:text="@string/chip_ok_sharpness"
+                    android:textColor="@color/sage_ink"
+                    android:textSize="11.5sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnRetryWarning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/bg_pill_ghost"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="11dp"
+                android:text="@string/btn_retry"
+                android:textAllCaps="false"
+                android:textColor="@color/sage_ink"
+                android:textSize="13.5sp"
+                android:textStyle="bold"
+                android:drawableStart="@drawable/ic_refresh"
+                android:drawableTint="@color/sage"
+                android:drawablePadding="7dp"
+                android:elevation="0dp"
+                android:stateListAnimator="@null" />
+        </LinearLayout>
+
+        <!-- STATE: result (normal / abnormal / uncertain share this layout) -->
+        <LinearLayout
+            android:id="@+id/groupResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingHorizontal="36dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/ivResultThumb"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:background="@drawable/bg_thumb_placeholder"
+                android:scaleType="centerCrop"
+                android:contentDescription="@null" />
+
+            <LinearLayout
+                android:id="@+id/resultBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@drawable/bg_badge_sage"
+                android:paddingHorizontal="18dp"
+                android:paddingVertical="9dp">
+
+                <ImageView
+                    android:id="@+id/ivResultBadgeIcon"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_check"
+                    app:tint="@color/sage_ink"
+                    android:contentDescription="@null" />
+
+                <TextView
+                    android:id="@+id/tvResultBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/badge_normal"
+                    android:textColor="@color/sage_ink"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvConfidenceNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="94%"
+                android:textColor="@color/sage_ink"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvConfidenceLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/confidence_label"
+                android:textColor="@color/ink_muted"
+                android:textSize="10.5sp"
+                android:letterSpacing="0.06"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvAdvice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_card"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="10dp"
+                android:text="@string/advice_abnormal"
+                android:textColor="@color/ink_muted"
+                android:textSize="12sp"
+                android:lineSpacingMultiplier="1.3"
+                android:gravity="center"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tvResultDisclaimer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/disclaimer_result"
+                android:textColor="@color/ink_muted"
+                android:textSize="10.5sp" />
+
+            <Button
+                android:id="@+id/btnRetryResult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_pill_ghost"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="11dp"
+                android:text="@string/btn_retry"
+                android:textAllCaps="false"
+                android:textColor="@color/sage_ink"
+                android:textSize="13.5sp"
+                android:textStyle="bold"
+                android:drawableStart="@drawable/ic_refresh"
+                android:drawableTint="@color/sage"
+                android:drawablePadding="7dp"
+                android:elevation="0dp"
+                android:stateListAnimator="@null" />
+        </LinearLayout>
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
