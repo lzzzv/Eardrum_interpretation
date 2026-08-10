@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -18,7 +19,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
@@ -139,7 +139,12 @@ class MainActivity : AppCompatActivity() {
         val confLabel = findViewById<TextView>(R.id.tvConfidenceLabel)
         val advice = findViewById<TextView>(R.id.tvAdvice)
 
-        confNum.text = "${(prediction.confidence * 100).roundToInt()}%"
+        // Raw confidence isn't shown in the UI yet (model isn't calibrated), but keep it in
+        // logcat so real-world numbers can be collected for calibration later.
+        Log.d("EardrumClassifier", "label=${prediction.label} confidence=${prediction.confidence}")
+
+        confNum.text = confidenceBucketLabel(prediction.confidence)
+        confLabel.text = getString(R.string.confidence_degree_label)
 
         when {
             prediction.confidence < confidenceThreshold -> {
@@ -149,7 +154,6 @@ class MainActivity : AppCompatActivity() {
                 badgeText.text = getString(R.string.badge_uncertain)
                 badgeText.setTextColor(getColor(R.color.apricot))
                 confNum.setTextColor(getColor(R.color.apricot))
-                confLabel.text = getString(R.string.confidence_label_low)
                 advice.text = getString(R.string.advice_uncertain)
                 advice.visibility = View.VISIBLE
             }
@@ -160,7 +164,6 @@ class MainActivity : AppCompatActivity() {
                 badgeText.text = getString(R.string.badge_normal)
                 badgeText.setTextColor(getColor(R.color.sage_ink))
                 confNum.setTextColor(getColor(R.color.sage_ink))
-                confLabel.text = getString(R.string.confidence_label)
                 advice.visibility = View.GONE
             }
             else -> {
@@ -170,11 +173,20 @@ class MainActivity : AppCompatActivity() {
                 badgeText.text = getString(R.string.badge_abnormal)
                 badgeText.setTextColor(getColor(R.color.coral))
                 confNum.setTextColor(getColor(R.color.coral))
-                confLabel.text = getString(R.string.confidence_label)
                 advice.text = getString(R.string.advice_abnormal)
                 advice.visibility = View.VISIBLE
             }
         }
+    }
+
+    /**
+     * Coarse High/Medium/Low bucket instead of a raw percentage: this model is not yet
+     * calibrated (see confidence discussion), so an exact number would overstate precision.
+     */
+    private fun confidenceBucketLabel(confidence: Float): String = when {
+        confidence >= 0.9f -> getString(R.string.confidence_high)
+        confidence >= 0.75f -> getString(R.string.confidence_medium)
+        else -> getString(R.string.confidence_low)
     }
 
     private fun showGroup(visible: View) {

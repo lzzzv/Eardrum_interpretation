@@ -308,7 +308,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="94%"
+                android:text="@string/confidence_high"
                 android:textColor="@color/sage_ink"
                 android:textSize="32sp"
                 android:textStyle="bold" />
@@ -317,7 +317,7 @@
                 android:id="@+id/tvConfidenceLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/confidence_label"
+                android:text="@string/confidence_degree_label"
                 android:textColor="@color/ink_muted"
                 android:textSize="10.5sp"
                 android:letterSpacing="0.06"

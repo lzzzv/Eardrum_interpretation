@@ -5,9 +5,13 @@ import kotlin.math.max
 
 /**
  * Lightweight, model-free image quality gate: catches obviously unusable photos
- * (too dark / too bright / too blurry) before they reach the classifier.
- * Thresholds are heuristic starting points and will likely need tuning against
- * real eardrum photos.
+ * (too dark / too bright / too blurry / not otoscope-shaped) before they reach the classifier.
+ *
+ * All thresholds below are v1 provisional values calibrated against a small sample
+ * (9 real otoscope photos + 12 synthetic edge cases). See docs/quality_gate_notes.md
+ * for the test results and known limitations (e.g. the vignette check can be fooled
+ * by a fabricated dark-cornered/bright-center image). Re-tune once more real-world
+ * uploads are available — do not treat these as final.
  */
 object ImageQualityChecker {
 

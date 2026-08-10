@@ -17,11 +17,13 @@
     <string name="chip_not_otoscope">不像耳鏡照片</string>
     <string name="chip_ok_shape">畫面形狀正常</string>
 
-    <string name="badge_normal">正常 Normal</string>
-    <string name="badge_abnormal">異常 Abnormal</string>
+    <string name="badge_normal">AI 判定：正常</string>
+    <string name="badge_abnormal">AI 判定：異常</string>
     <string name="badge_uncertain">無法確定</string>
-    <string name="confidence_label">信心值</string>
-    <string name="confidence_label_low">信心值偏低</string>
+    <string name="confidence_degree_label">模型信心度</string>
+    <string name="confidence_high">高</string>
+    <string name="confidence_medium">中</string>
+    <string name="confidence_low">低</string>
     <string name="advice_abnormal">建議諮詢耳鼻喉科醫師進一步檢查</string>
     <string name="advice_uncertain">AI 對這張影像不太確定，可能是角度、品質或影像本身較不典型</string>
 
