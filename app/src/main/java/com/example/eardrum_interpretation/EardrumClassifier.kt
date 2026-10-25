@@ -11,13 +11,9 @@ import java.nio.channels.FileChannel
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-/**
- * Wraps the Ultralytics YOLO classification export (best_float16.tflite).
- * Model metadata (read from the exported .onnx): imgsz [320,320], channels 3,
- * names {0: 'Abnormal', 1: 'Normal'}, output already softmax'd.
- * Preprocessing matches ultralytics classify_transforms: resize shortest side,
- * center-crop to the model's input size, scale to 0..1 (no mean/std normalization).
- */
+// 耳膜分類模型（Ultralytics YOLO 分類模型，轉成 TFLite float16）。
+// 輸入 320x320 RGB，輸出 [Abnormal, Normal] 的機率。
+// 前處理比照 Ultralytics classify_transforms：短邊縮放、置中裁切、像素值縮到 0~1（不做 mean/std 正規化）。
 class EardrumClassifier(context: Context) {
 
     private val interpreter: Interpreter = Interpreter(loadModelFile(context, MODEL_FILE))
@@ -33,7 +29,7 @@ class EardrumClassifier(context: Context) {
 
     init {
         val shape = interpreter.getInputTensor(0).shape()
-        // NHWC -> [1, H, W, 3], NCHW -> [1, 3, H, W]
+        // NHWC 為 [1, H, W, 3]，NCHW 為 [1, 3, H, W]
         inputIsNhwc = shape.size == 4 && shape[3] == 3
         inputSize = if (inputIsNhwc) shape[1] else shape[2]
     }
@@ -73,7 +69,7 @@ class EardrumClassifier(context: Context) {
                 buffer.putFloat((p and 0xFF) / 255f)
             }
         } else {
-            // NCHW: write all R, then all G, then all B
+            // NCHW：依序寫入所有 R、G、B 通道
             for (channel in 0..2) {
                 val shift = when (channel) { 0 -> 16; 1 -> 8; else -> 0 }
                 for (p in pixels) {

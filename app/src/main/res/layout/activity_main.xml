@@ -8,7 +8,7 @@
     android:background="@color/cream"
     tools:context=".MainActivity">
 
-    <!-- Top bar -->
+    <!-- 上方標題列 -->
     <LinearLayout
         android:id="@+id/topBar"
         android:layout_width="0dp"
@@ -45,7 +45,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Disclaimer footer -->
+    <!-- 底部免責聲明 -->
     <TextView
         android:id="@+id/tvDisclaimer"
         android:layout_width="0dp"
@@ -60,7 +60,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Center content area, one group visible at a time -->
+    <!-- 中間內容區，一次只顯示其中一組 -->
     <FrameLayout
         android:id="@+id/content"
         android:layout_width="0dp"
@@ -70,7 +70,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- STATE: empty -->
+        <!-- 狀態：尚未選擇圖片 -->
         <LinearLayout
             android:id="@+id/groupEmpty"
             android:layout_width="match_parent"
@@ -133,7 +133,7 @@
                 android:stateListAnimator="@null" />
         </LinearLayout>
 
-        <!-- STATE: quality warning -->
+        <!-- 狀態：照片品質不合格 -->
         <LinearLayout
             android:id="@+id/groupWarning"
             android:layout_width="match_parent"
@@ -254,7 +254,7 @@
                 android:stateListAnimator="@null" />
         </LinearLayout>
 
-        <!-- STATE: result (normal / abnormal / uncertain share this layout) -->
+        <!-- 狀態：判讀結果（正常 / 異常 / 無法判斷共用此版面） -->
         <LinearLayout
             android:id="@+id/groupResult"
             android:layout_width="match_parent"

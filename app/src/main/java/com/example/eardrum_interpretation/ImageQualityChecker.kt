@@ -3,16 +3,9 @@ package com.example.eardrum_interpretation
 import android.graphics.Bitmap
 import kotlin.math.max
 
-/**
- * Lightweight, model-free image quality gate: catches obviously unusable photos
- * (too dark / too bright / too blurry / not otoscope-shaped) before they reach the classifier.
- *
- * All thresholds below are v1 provisional values calibrated against a small sample
- * (9 real otoscope photos + 12 synthetic edge cases). See docs/quality_gate_notes.md
- * for the test results and known limitations (e.g. the vignette check can be fooled
- * by a fabricated dark-cornered/bright-center image). Re-tune once more real-world
- * uploads are available — do not treat these as final.
- */
+// 判讀前的照片品質檢查，過暗、過亮、模糊或不像耳鏡照片的圖片會被擋下。
+// 門檻值為暫定，依 9 張真實耳鏡照片與 12 張合成測試圖調整，
+// 測試結果與已知限制見 docs/quality_gate_notes.md。
 object ImageQualityChecker {
 
     private const val ANALYSIS_MAX_DIMENSION = 200
@@ -20,9 +13,9 @@ object ImageQualityChecker {
     private const val BRIGHT_THRESHOLD = 200.0
     private const val BLUR_VARIANCE_THRESHOLD = 45.0
 
-    // Otoscope photos are a bright/colored circle surrounded by a near-black vignette.
-    // Calibrated against 9 real otoscope photos (corner 1.4-25.6, center-corner gap 74-161)
-    // vs. non-otoscope test images (corner ~158, gap <1).
+    // 耳鏡照片中間是亮的圓形視野，四周是暗角。
+    // 真實照片：四角亮度 1.4~25.6，中心與四角差 74~161；
+    // 非耳鏡照片：四角亮度約 158，差值小於 1。
     private const val CORNER_FRACTION = 0.15
     private const val CENTER_FRACTION = 0.35
     private const val VIGNETTE_CORNER_MAX = 40.0
@@ -49,14 +42,14 @@ object ImageQualityChecker {
             isDark = isDark,
             isBright = isBright,
             isBlurry = sharpness < BLUR_VARIANCE_THRESHOLD,
-            // Vignette shape is meaningless once the whole frame is already blown out dark/bright.
+            // 整張過暗或過亮時不做暗角檢查
             missingVignette = !isDark && !isBright && !hasOtoscopeVignette(gray),
             brightness = brightness,
             sharpness = sharpness
         )
     }
 
-    /** True if the frame looks like a typical otoscope capture: dark corners, bright center. */
+    // 判斷是否像耳鏡照片：四角暗、中間亮
     private fun hasOtoscopeVignette(gray: GrayImage): Boolean {
         val w = gray.width
         val h = gray.height
@@ -116,7 +109,7 @@ object ImageQualityChecker {
         return GrayImage(w, h, gray)
     }
 
-    /** Variance of the Laplacian response; low variance means few sharp edges, i.e. blur. */
+    // Laplacian 變異數，數值低代表清楚的邊緣少，也就是影像模糊
     private fun laplacianVariance(image: GrayImage): Double {
         val w = image.width
         val h = image.height

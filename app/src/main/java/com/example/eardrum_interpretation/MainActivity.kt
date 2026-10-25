@@ -139,8 +139,7 @@ class MainActivity : AppCompatActivity() {
         val confLabel = findViewById<TextView>(R.id.tvConfidenceLabel)
         val advice = findViewById<TextView>(R.id.tvAdvice)
 
-        // Raw confidence isn't shown in the UI yet (model isn't calibrated), but keep it in
-        // logcat so real-world numbers can be collected for calibration later.
+        // 模型尚未校準，信心值先不顯示在畫面上，只寫入 log 供之後分析
         Log.d("EardrumClassifier", "label=${prediction.label} confidence=${prediction.confidence}")
 
         confNum.text = confidenceBucketLabel(prediction.confidence)
@@ -179,10 +178,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Coarse High/Medium/Low bucket instead of a raw percentage: this model is not yet
-     * calibrated (see confidence discussion), so an exact number would overstate precision.
-     */
+    // 將信心值分成高 / 中 / 低。模型尚未校準，直接顯示百分比會讓結果看起來比實際精準
     private fun confidenceBucketLabel(confidence: Float): String = when {
         confidence >= 0.9f -> getString(R.string.confidence_high)
         confidence >= 0.75f -> getString(R.string.confidence_medium)
